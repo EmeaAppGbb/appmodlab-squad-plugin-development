@@ -1,0 +1,14 @@
+{
+  "name": "squad-plugin-test-project",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "node src/index.js",
+    "test": "echo 'Test project for SQUAD plugins'"
+  },
+  "dependencies": {
+    "@squad/plugin-jira-integration": "file:../plugins/jira-integration",
+    "@squad/plugin-db-migration-checker": "file:../plugins/db-migration-checker",
+    "@squad/plugin-changelog-generator": "file:../plugins/changelog-generator"
+  }
+}

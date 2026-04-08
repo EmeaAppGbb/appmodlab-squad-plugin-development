@@ -1,0 +1,24 @@
+{
+  "name": "@squad/plugin-changelog-generator",
+  "version": "1.0.0",
+  "description": "SQUAD plugin for generating changelogs from conventional commits",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest",
+    "lint": "eslint src --ext .ts"
+  },
+  "keywords": ["squad", "plugin", "changelog", "semver", "release"],
+  "author": "SQUAD Community",
+  "license": "MIT",
+  "peerDependencies": {
+    "@squad/sdk": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8",
+    "eslint": "^9.18.0"
+  }
+}
