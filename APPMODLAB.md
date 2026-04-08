@@ -1,11 +1,19 @@
 ---
 title: "SQUAD Plugin Development"
+description: "Build and publish custom SQUAD plugins to extend agent capabilities with new skills and integrations"
+authors: ["marconsilva"]
 category: "Agentic Software Development"
-priority: "P3"
-languages: ["TypeScript"]
-duration: "4-6 hours"
-repository: "appmodlab-squad-plugin-development"
-organization: "EmeaAppGbb"
+industry: "Cross-Industry"
+services: []
+languages: ["TypeScript", "JavaScript"]
+frameworks: ["Node.js"]
+modernizationTools: []
+agenticTools: ["SQUAD"]
+tags: ["squad", "plugins", "agentic", "typescript", "sdk"]
+extensions: ["github.copilot"]
+thumbnail: ""
+video: ""
+version: "1.0.0"
 ---
 
 # SQUAD Plugin Development
