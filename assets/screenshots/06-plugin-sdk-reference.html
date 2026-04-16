@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Plugin SDK Reference</title>
+<style>
+  body { margin: 0; padding: 32px; background: #1e1e2e; font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace; color: #cdd6f4; }
+  .title { color: #cba6f7; font-size: 18px; margin: 0 0 8px 0; font-family: 'Segoe UI', sans-serif; }
+  .subtitle { color: #a6adc8; font-size: 13px; margin-bottom: 20px; font-family: 'Segoe UI', sans-serif; }
+  .section { margin-bottom: 20px; }
+  .section-title { color: #89b4fa; font-size: 14px; font-family: 'Segoe UI', sans-serif; margin-bottom: 8px; font-weight: 600; }
+  .file-tab { background: #313244; display: inline-block; padding: 6px 14px; border-radius: 8px 8px 0 0; font-size: 12px; color: #89b4fa; border: 1px solid #45475a; border-bottom: none; }
+  .code-block { background: #181825; border: 1px solid #45475a; border-radius: 0 10px 10px 10px; padding: 16px 20px; overflow-x: auto; font-size: 13px; line-height: 1.6; }
+  .kw { color: #cba6f7; }
+  .type { color: #89b4fa; }
+  .str { color: #a6e3a1; }
+  .fn { color: #89dceb; }
+  .prop { color: #f5c2e7; }
+  .iface { color: #f9e2af; }
+  .comment { color: #6c7086; font-style: italic; }
+  .op { color: #94e2d5; }
+  .agent-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-family: 'Segoe UI', sans-serif; font-size: 13px; }
+  .agent-table th { background: #313244; padding: 8px 14px; text-align: left; color: #89b4fa; border: 1px solid #45475a; }
+  .agent-table td { padding: 8px 14px; border: 1px solid #45475a; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+</style>
+</head>
+<body>
+  <p class="title">📖 SQUAD Plugin SDK Reference</p>
+  <p class="subtitle">docs/plugin-sdk-reference.md — Core interfaces every plugin must implement</p>
+
+  <div class="cols">
+    <div class="section">
+      <p class="section-title">SquadPlugin Interface</p>
+      <div class="file-tab">interface</div>
+      <div class="code-block"><span class="kw">interface</span> <span class="iface">SquadPlugin</span> {
+  <span class="fn">init</span>(): <span class="type">Promise</span>&lt;<span class="iface">PluginMetadata</span>&gt;;
+  <span class="fn">getSkills</span>(): <span class="iface">Skill</span>[];
+}
+
+<span class="kw">interface</span> <span class="iface">PluginMetadata</span> {
+  <span class="prop">name</span>: <span class="type">string</span>;
+  <span class="prop">version</span>: <span class="type">string</span>;
+  <span class="prop">description</span>?: <span class="type">string</span>;
+}
+
+<span class="kw">interface</span> <span class="iface">Skill</span> {
+  <span class="prop">name</span>: <span class="type">string</span>;
+  <span class="prop">description</span>: <span class="type">string</span>;
+  <span class="prop">handler</span>: <span class="type">Function</span>;
+}</div>
+    </div>
+
+    <div class="section">
+      <p class="section-title">AgentContext &amp; Event Hooks</p>
+      <div class="file-tab">context</div>
+      <div class="code-block"><span class="kw">interface</span> <span class="iface">AgentContext</span> {
+  <span class="prop">agent</span>: <span class="str">'eyes'</span> | <span class="str">'mouth'</span> | <span class="str">'brain'</span>
+       | <span class="str">'hands'</span> | <span class="str">'ralph'</span>;
+  <span class="prop">repository</span>: <span class="type">string</span>;
+  <span class="prop">workspace</span>: <span class="type">string</span>;
+  <span class="prop">config</span>: <span class="type">Record</span>&lt;<span class="type">string</span>, <span class="type">any</span>&gt;;
+}
+
+<span class="kw">interface</span> <span class="iface">EventHooks</span> {
+  <span class="fn">onPRCreated</span>?: (pr) <span class="op">=&gt;</span> <span class="type">void</span>;
+  <span class="fn">onIssueOpened</span>?: (issue) <span class="op">=&gt;</span> <span class="type">void</span>;
+  <span class="fn">onCommitPushed</span>?: (commit) <span class="op">=&gt;</span> <span class="type">void</span>;
+}</div>
+    </div>
+  </div>
+
+  <div class="section" style="margin-top: 8px;">
+    <p class="section-title">Agent ↔ Plugin Skill Mapping</p>
+    <table class="agent-table">
+      <tr><th>Agent</th><th>Common Plugin Skills</th></tr>
+      <tr><td>🔍 Eyes</td><td>Code review rules, security checks, migration safety</td></tr>
+      <tr><td>📢 Mouth</td><td>Release notes, changelog, documentation generation</td></tr>
+      <tr><td>🧠 Brain</td><td>Architecture analysis, planning, estimation</td></tr>
+      <tr><td>🤲 Hands</td><td>Code generation, refactoring, scaffolding</td></tr>
+      <tr><td>🧑‍💼 Ralph</td><td>Task automation, scheduling, Jira sync</td></tr>
+    </table>
+  </div>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Plugin Architecture Overview</title>
+<style>
+  body { margin: 0; padding: 32px; background: #1e1e2e; font-family: 'Segoe UI', 'Cascadia Code', monospace; color: #cdd6f4; }
+  .header { background: linear-gradient(135deg, #313244 0%, #45475a 100%); border-radius: 12px; padding: 24px; margin-bottom: 24px; border: 1px solid #585b70; }
+  .header h1 { margin: 0 0 8px 0; font-size: 22px; color: #cba6f7; }
+  .header p { margin: 0; color: #a6adc8; font-size: 14px; }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; margin-right: 6px; font-weight: 600; }
+  .badge-ts { background: #3178c6; color: #fff; }
+  .badge-sdk { background: #a6e3a1; color: #1e1e2e; }
+  .badge-jest { background: #f38ba8; color: #1e1e2e; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+  .card { background: #313244; border-radius: 10px; padding: 20px; border: 1px solid #45475a; }
+  .card h3 { margin: 0 0 8px 0; font-size: 16px; }
+  .card .icon { font-size: 28px; margin-bottom: 8px; display: block; }
+  .card ul { margin: 8px 0 0 0; padding-left: 18px; font-size: 13px; color: #a6adc8; }
+  .card ul li { margin-bottom: 4px; }
+  .flow { background: #313244; border-radius: 10px; padding: 20px; border: 1px solid #45475a; text-align: center; }
+  .flow h3 { margin: 0 0 12px 0; color: #89b4fa; }
+  .flow-steps { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; flex-wrap: wrap; }
+  .flow-step { background: #45475a; padding: 8px 14px; border-radius: 8px; color: #f5e0dc; }
+  .flow-arrow { color: #a6e3a1; font-weight: bold; font-size: 18px; }
+  .tag-line { text-align: center; color: #585b70; font-size: 12px; margin-top: 16px; }
+</style>
+</head>
+<body>
+  <div class="header">
+    <h1>🔌 SQUAD Plugin Development — Architecture</h1>
+    <p>Build custom skills, integrate external tools, and publish to the SQUAD marketplace</p>
+    <div style="margin-top: 10px;">
+      <span class="badge badge-ts">TypeScript</span>
+      <span class="badge badge-sdk">SQUAD SDK</span>
+      <span class="badge badge-jest">Vitest</span>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <span class="icon">🎫</span>
+      <h3 style="color:#89b4fa;">Jira Integration</h3>
+      <ul>
+        <li>Bidirectional issue sync</li>
+        <li>GitHub → Jira creation</li>
+        <li>Jira → GitHub status</li>
+        <li>Skills: <code>sync-issue-to-jira</code>, <code>sync-status-from-jira</code></li>
+      </ul>
+    </div>
+    <div class="card">
+      <span class="icon">🛡️</span>
+      <h3 style="color:#f38ba8;">DB Migration Checker</h3>
+      <ul>
+        <li>Scans migration files</li>
+        <li>Detects DROP TABLE / COLUMN</li>
+        <li>Detects TRUNCATE, RENAME</li>
+        <li>Skill: <code>check-migration-safety</code></li>
+      </ul>
+    </div>
+    <div class="card">
+      <span class="icon">📝</span>
+      <h3 style="color:#a6e3a1;">Changelog Generator</h3>
+      <ul>
+        <li>Conventional commit parsing</li>
+        <li>Semver version bumps</li>
+        <li>Categorized Markdown output</li>
+        <li>Skills: <code>generate-changelog</code>, <code>calculate-version</code></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="flow">
+    <h3>Plugin Lifecycle</h3>
+    <div class="flow-steps">
+      <span class="flow-step">📦 Load</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step">⚙️ Init</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step">🎯 Register Skills</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step">▶️ Execute</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step">🧹 Cleanup</span>
+    </div>
+  </div>
+  <p class="tag-line">appmodlab-squad-plugin-development · 3 plugins · TypeScript · SQUAD SDK</p>
+</body>
+</html>

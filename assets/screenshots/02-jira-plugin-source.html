@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Jira Integration Plugin — Source</title>
+<style>
+  body { margin: 0; padding: 32px; background: #1e1e2e; font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace; color: #cdd6f4; }
+  .file-tab { background: #313244; display: inline-block; padding: 8px 18px; border-radius: 10px 10px 0 0; font-size: 13px; color: #89b4fa; border: 1px solid #45475a; border-bottom: none; }
+  .code-block { background: #181825; border: 1px solid #45475a; border-radius: 0 10px 10px 10px; padding: 20px 24px; overflow-x: auto; font-size: 13px; line-height: 1.6; }
+  .ln { color: #585b70; user-select: none; display: inline-block; width: 32px; text-align: right; margin-right: 16px; }
+  .kw { color: #cba6f7; }
+  .type { color: #89b4fa; }
+  .str { color: #a6e3a1; }
+  .fn { color: #89dceb; }
+  .comment { color: #6c7086; font-style: italic; }
+  .prop { color: #f5c2e7; }
+  .num { color: #fab387; }
+  .op { color: #94e2d5; }
+  .iface { color: #f9e2af; }
+  .title { color: #cba6f7; font-size: 18px; margin: 0 0 16px 0; font-family: 'Segoe UI', sans-serif; }
+  .subtitle { color: #a6adc8; font-size: 13px; margin-bottom: 12px; font-family: 'Segoe UI', sans-serif; }
+</style>
+</head>
+<body>
+  <p class="title">🎫 Plugin 1 — Jira Integration</p>
+  <p class="subtitle">plugins/jira-integration/src/index.ts — Bidirectional GitHub ↔ Jira issue sync</p>
+  <div class="file-tab">📄 index.ts</div>
+  <div class="code-block"><span class="ln"> 1</span><span class="kw">import</span> axios <span class="kw">from</span> <span class="str">'axios'</span>;
+<span class="ln"> 2</span>
+<span class="ln"> 3</span><span class="kw">export interface</span> <span class="iface">JiraPluginConfig</span> {
+<span class="ln"> 4</span>  <span class="prop">jiraUrl</span>: <span class="type">string</span>;
+<span class="ln"> 5</span>  <span class="prop">username</span>: <span class="type">string</span>;
+<span class="ln"> 6</span>  <span class="prop">apiToken</span>: <span class="type">string</span>;
+<span class="ln"> 7</span>  <span class="prop">projectKey</span>: <span class="type">string</span>;
+<span class="ln"> 8</span>}
+<span class="ln"> 9</span>
+<span class="ln">10</span><span class="kw">export class</span> <span class="type">JiraIntegrationPlugin</span> {
+<span class="ln">11</span>  <span class="kw">private</span> <span class="prop">config</span>: <span class="iface">JiraPluginConfig</span>;
+<span class="ln">12</span>  <span class="kw">private</span> <span class="prop">client</span>: <span class="type">any</span>;
+<span class="ln">13</span>
+<span class="ln">14</span>  <span class="fn">constructor</span>(<span class="prop">config</span>: <span class="iface">JiraPluginConfig</span>) {
+<span class="ln">15</span>    <span class="kw">this</span>.<span class="prop">config</span> <span class="op">=</span> config;
+<span class="ln">16</span>    <span class="kw">this</span>.<span class="prop">client</span> <span class="op">=</span> axios.<span class="fn">create</span>({
+<span class="ln">17</span>      <span class="prop">baseURL</span>: <span class="str">`${config.jiraUrl}/rest/api/3`</span>,
+<span class="ln">18</span>      <span class="prop">auth</span>: { <span class="prop">username</span>: config.<span class="prop">username</span>, <span class="prop">password</span>: config.<span class="prop">apiToken</span> },
+<span class="ln">19</span>    });
+<span class="ln">20</span>  }
+<span class="ln">21</span>
+<span class="ln">22</span>  <span class="kw">async</span> <span class="fn">init</span>() {
+<span class="ln">23</span>    <span class="kw">return</span> { <span class="prop">name</span>: <span class="str">'jira-integration'</span>, <span class="prop">version</span>: <span class="str">'1.0.0'</span>, <span class="prop">skills</span>: <span class="kw">this</span>.<span class="fn">getSkills</span>() };
+<span class="ln">24</span>  }
+<span class="ln">25</span>
+<span class="ln">26</span>  <span class="fn">getSkills</span>() {
+<span class="ln">27</span>    <span class="kw">return</span> [
+<span class="ln">28</span>      { <span class="prop">name</span>: <span class="str">'sync-issue-to-jira'</span>,     <span class="prop">handler</span>: <span class="kw">this</span>.<span class="fn">syncIssueToJira</span>.<span class="fn">bind</span>(<span class="kw">this</span>) },
+<span class="ln">29</span>      { <span class="prop">name</span>: <span class="str">'sync-status-from-jira'</span>, <span class="prop">handler</span>: <span class="kw">this</span>.<span class="fn">syncStatusFromJira</span>.<span class="fn">bind</span>(<span class="kw">this</span>) },
+<span class="ln">30</span>    ];
+<span class="ln">31</span>  }
+<span class="ln">32</span>
+<span class="ln">33</span>  <span class="kw">async</span> <span class="fn">syncIssueToJira</span>(<span class="prop">githubIssue</span>: <span class="type">any</span>): <span class="type">Promise</span>&lt;<span class="iface">JiraIssue</span>&gt; {
+<span class="ln">34</span>    <span class="comment">// Creates Jira issue from GitHub issue via REST API v3</span>
+<span class="ln">35</span>    <span class="kw">const</span> response <span class="op">=</span> <span class="kw">await</span> <span class="kw">this</span>.<span class="prop">client</span>.<span class="fn">post</span>(<span class="str">'/issue'</span>, { <span class="prop">fields</span>: { ... } });
+<span class="ln">36</span>    <span class="kw">return</span> { <span class="prop">key</span>: response.data.key, <span class="prop">status</span>: <span class="str">'To Do'</span> };
+<span class="ln">37</span>  }
+<span class="ln">38</span>
+<span class="ln">39</span>  <span class="kw">async</span> <span class="fn">syncStatusFromJira</span>(<span class="prop">jiraKey</span>: <span class="type">string</span>): <span class="type">Promise</span>&lt;<span class="type">string</span>&gt; {
+<span class="ln">40</span>    <span class="comment">// Maps Jira status → GitHub status (To Do→open, Done→closed, etc.)</span>
+<span class="ln">41</span>    <span class="kw">const</span> response <span class="op">=</span> <span class="kw">await</span> <span class="kw">this</span>.<span class="prop">client</span>.<span class="fn">get</span>(<span class="str">`/issue/${jiraKey}`</span>);
+<span class="ln">42</span>    <span class="kw">return</span> statusMapping[response.data.fields.status.name];
+<span class="ln">43</span>  }
+<span class="ln">44</span>}
+</div>
+</body>
+</html>

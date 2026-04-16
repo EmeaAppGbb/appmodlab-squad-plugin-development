@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Plugin Package Configuration</title>
+<style>
+  body { margin: 0; padding: 32px; background: #1e1e2e; font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace; color: #cdd6f4; }
+  .title { color: #cba6f7; font-size: 18px; margin: 0 0 16px 0; font-family: 'Segoe UI', sans-serif; }
+  .subtitle { color: #a6adc8; font-size: 13px; margin-bottom: 20px; font-family: 'Segoe UI', sans-serif; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .file-tab { background: #313244; display: inline-block; padding: 6px 14px; border-radius: 8px 8px 0 0; font-size: 12px; color: #fab387; border: 1px solid #45475a; border-bottom: none; }
+  .code-block { background: #181825; border: 1px solid #45475a; border-radius: 0 10px 10px 10px; padding: 16px 20px; overflow-x: auto; font-size: 12.5px; line-height: 1.5; }
+  .json-key { color: #89b4fa; }
+  .json-str { color: #a6e3a1; }
+  .json-brace { color: #cdd6f4; }
+  .json-comment { color: #6c7086; font-style: italic; }
+  .link-box { background: #313244; border-radius: 10px; padding: 16px 20px; border: 1px solid #45475a; font-family: 'Segoe UI', sans-serif; font-size: 13px; }
+  .link-box h4 { margin: 0 0 8px 0; color: #89b4fa; font-size: 14px; }
+  .link-box code { background: #181825; padding: 2px 8px; border-radius: 4px; color: #a6e3a1; }
+</style>
+</head>
+<body>
+  <p class="title">📦 Plugin Package Configuration</p>
+  <p class="subtitle">Each plugin ships as a scoped npm package with @squad/sdk peer dependency</p>
+
+  <div class="grid">
+    <div>
+      <div class="file-tab">jira-integration/package.json</div>
+      <div class="code-block">{
+  <span class="json-key">"name"</span>: <span class="json-str">"@squad/plugin-jira-integration"</span>,
+  <span class="json-key">"version"</span>: <span class="json-str">"1.0.0"</span>,
+  <span class="json-key">"main"</span>: <span class="json-str">"dist/index.js"</span>,
+  <span class="json-key">"types"</span>: <span class="json-str">"dist/index.d.ts"</span>,
+  <span class="json-key">"peerDependencies"</span>: {
+    <span class="json-key">"@squad/sdk"</span>: <span class="json-str">"^1.0.0"</span>
+  },
+  <span class="json-key">"dependencies"</span>: {
+    <span class="json-key">"axios"</span>: <span class="json-str">"^1.7.9"</span>
+  }
+}</div>
+    </div>
+    <div>
+      <div class="file-tab">db-migration-checker/package.json</div>
+      <div class="code-block">{
+  <span class="json-key">"name"</span>: <span class="json-str">"@squad/plugin-db-migration-checker"</span>,
+  <span class="json-key">"version"</span>: <span class="json-str">"1.0.0"</span>,
+  <span class="json-key">"main"</span>: <span class="json-str">"dist/index.js"</span>,
+  <span class="json-key">"types"</span>: <span class="json-str">"dist/index.d.ts"</span>,
+  <span class="json-key">"peerDependencies"</span>: {
+    <span class="json-key">"@squad/sdk"</span>: <span class="json-str">"^1.0.0"</span>
+  }
+  <span class="json-comment">// zero runtime deps — uses only Node fs/path</span>
+}</div>
+    </div>
+  </div>
+
+  <div class="link-box">
+    <h4>🔗 Test Project Links Plugins Locally</h4>
+    <p>In <code>test-project/package.json</code>, each plugin is linked via <code>file:</code> protocol:</p>
+    <p style="margin-top:8px;">
+      <code>"@squad/plugin-jira-integration": "file:../plugins/jira-integration"</code><br>
+      <code>"@squad/plugin-db-migration-checker": "file:../plugins/db-migration-checker"</code><br>
+      <code>"@squad/plugin-changelog-generator": "file:../plugins/changelog-generator"</code>
+    </p>
+  </div>
+</body>
+</html>

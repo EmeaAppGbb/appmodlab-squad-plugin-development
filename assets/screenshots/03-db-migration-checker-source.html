@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DB Migration Checker Plugin — Source</title>
+<style>
+  body { margin: 0; padding: 32px; background: #1e1e2e; font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace; color: #cdd6f4; }
+  .file-tab { background: #313244; display: inline-block; padding: 8px 18px; border-radius: 10px 10px 0 0; font-size: 13px; color: #f38ba8; border: 1px solid #45475a; border-bottom: none; }
+  .code-block { background: #181825; border: 1px solid #45475a; border-radius: 0 10px 10px 10px; padding: 20px 24px; overflow-x: auto; font-size: 13px; line-height: 1.6; }
+  .ln { color: #585b70; user-select: none; display: inline-block; width: 32px; text-align: right; margin-right: 16px; }
+  .kw { color: #cba6f7; }
+  .type { color: #89b4fa; }
+  .str { color: #a6e3a1; }
+  .fn { color: #89dceb; }
+  .comment { color: #6c7086; font-style: italic; }
+  .prop { color: #f5c2e7; }
+  .regex { color: #fab387; }
+  .op { color: #94e2d5; }
+  .iface { color: #f9e2af; }
+  .err { color: #f38ba8; font-weight: bold; }
+  .warn { color: #f9e2af; font-weight: bold; }
+  .title { color: #cba6f7; font-size: 18px; margin: 0 0 16px 0; font-family: 'Segoe UI', sans-serif; }
+  .subtitle { color: #a6adc8; font-size: 13px; margin-bottom: 12px; font-family: 'Segoe UI', sans-serif; }
+  .rules-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-family: 'Segoe UI', sans-serif; font-size: 13px; }
+  .rules-table th { background: #313244; padding: 10px 14px; text-align: left; color: #89b4fa; border: 1px solid #45475a; }
+  .rules-table td { padding: 10px 14px; border: 1px solid #45475a; }
+  .rules-table tr:nth-child(even) { background: #181825; }
+</style>
+</head>
+<body>
+  <p class="title">🛡️ Plugin 2 — DB Migration Checker</p>
+  <p class="subtitle">plugins/db-migration-checker/src/index.ts — Detect destructive database changes in migrations</p>
+  <div class="file-tab">📄 index.ts — Safety Rules</div>
+  <div class="code-block"><span class="ln"> 1</span><span class="kw">export class</span> <span class="type">DbMigrationCheckerPlugin</span> {
+<span class="ln"> 2</span>  <span class="kw">private</span> <span class="prop">safetyRules</span>: <span class="iface">SafetyRule</span>[] <span class="op">=</span> [
+<span class="ln"> 3</span>    { <span class="prop">pattern</span>: <span class="regex">/DROP\s+TABLE/i</span>,              <span class="prop">severity</span>: <span class="err">'error'</span>,   <span class="prop">message</span>: <span class="str">'DROP TABLE — data loss'</span> },
+<span class="ln"> 4</span>    { <span class="prop">pattern</span>: <span class="regex">/DROP\s+COLUMN/i</span>,             <span class="prop">severity</span>: <span class="err">'error'</span>,   <span class="prop">message</span>: <span class="str">'DROP COLUMN — data loss'</span> },
+<span class="ln"> 5</span>    { <span class="prop">pattern</span>: <span class="regex">/ALTER\s+TABLE\s+\w+\s+DROP/i</span>, <span class="prop">severity</span>: <span class="err">'error'</span>,   <span class="prop">message</span>: <span class="str">'ALTER TABLE DROP — data loss'</span> },
+<span class="ln"> 6</span>    { <span class="prop">pattern</span>: <span class="regex">/TRUNCATE\s+TABLE/i</span>,           <span class="prop">severity</span>: <span class="err">'error'</span>,   <span class="prop">message</span>: <span class="str">'TRUNCATE — data deleted'</span> },
+<span class="ln"> 7</span>    { <span class="prop">pattern</span>: <span class="regex">/DELETE\s+FROM.*WHERE/i</span>,       <span class="prop">severity</span>: <span class="warn">'warning'</span>, <span class="prop">message</span>: <span class="str">'DELETE with WHERE — review'</span> },
+<span class="ln"> 8</span>    { <span class="prop">pattern</span>: <span class="regex">/ALTER\s+TABLE\s+\w+\s+RENAME/i</span>,<span class="prop">severity</span>: <span class="warn">'warning'</span>, <span class="prop">message</span>: <span class="str">'RENAME — may break code'</span> },
+<span class="ln"> 9</span>    { <span class="prop">pattern</span>: <span class="regex">/CREATE\s+UNIQUE\s+INDEX/i</span>,    <span class="prop">severity</span>: <span class="warn">'warning'</span>, <span class="prop">message</span>: <span class="str">'UNIQUE constraint — may fail'</span> },
+<span class="ln">10</span>  ];
+<span class="ln">11</span>
+<span class="ln">12</span>  <span class="kw">async</span> <span class="fn">checkMigrationSafety</span>(<span class="prop">migrationDir</span>: <span class="type">string</span>): <span class="type">Promise</span>&lt;<span class="iface">SafetyReport</span>&gt; {
+<span class="ln">13</span>    <span class="comment">// Recursively finds .sql / .ts files, applies regex rules line-by-line</span>
+<span class="ln">14</span>    <span class="comment">// Returns { safe: boolean, issues: SafetyIssue[] }</span>
+<span class="ln">15</span>  }
+<span class="ln">16</span>}</div>
+
+  <table class="rules-table">
+    <tr><th>Pattern</th><th>Severity</th><th>Meaning</th></tr>
+    <tr><td><code>DROP TABLE</code></td><td style="color:#f38ba8;">❌ Error</td><td>Entire table removed — irreversible data loss</td></tr>
+    <tr><td><code>DROP COLUMN</code></td><td style="color:#f38ba8;">❌ Error</td><td>Column deleted — data in that column lost</td></tr>
+    <tr><td><code>TRUNCATE TABLE</code></td><td style="color:#f38ba8;">❌ Error</td><td>All rows deleted without logging</td></tr>
+    <tr><td><code>RENAME</code></td><td style="color:#f9e2af;">⚠️ Warning</td><td>May break existing queries and ORM mappings</td></tr>
+    <tr><td><code>CREATE UNIQUE INDEX</code></td><td style="color:#f9e2af;">⚠️ Warning</td><td>Could fail if duplicate data already exists</td></tr>
+  </table>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Changelog Generator Plugin — Source</title>
+<style>
+  body { margin: 0; padding: 32px; background: #1e1e2e; font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace; color: #cdd6f4; }
+  .file-tab { background: #313244; display: inline-block; padding: 8px 18px; border-radius: 10px 10px 0 0; font-size: 13px; color: #a6e3a1; border: 1px solid #45475a; border-bottom: none; }
+  .code-block { background: #181825; border: 1px solid #45475a; border-radius: 0 10px 10px 10px; padding: 20px 24px; overflow-x: auto; font-size: 13px; line-height: 1.6; }
+  .ln { color: #585b70; user-select: none; display: inline-block; width: 32px; text-align: right; margin-right: 16px; }
+  .kw { color: #cba6f7; }
+  .type { color: #89b4fa; }
+  .str { color: #a6e3a1; }
+  .fn { color: #89dceb; }
+  .comment { color: #6c7086; font-style: italic; }
+  .prop { color: #f5c2e7; }
+  .num { color: #fab387; }
+  .op { color: #94e2d5; }
+  .iface { color: #f9e2af; }
+  .title { color: #cba6f7; font-size: 18px; margin: 0 0 16px 0; font-family: 'Segoe UI', sans-serif; }
+  .subtitle { color: #a6adc8; font-size: 13px; margin-bottom: 12px; font-family: 'Segoe UI', sans-serif; }
+  .semver-box { background: #313244; border-radius: 10px; padding: 16px 20px; border: 1px solid #45475a; margin-top: 20px; font-family: 'Segoe UI', sans-serif; }
+  .semver-box h4 { margin: 0 0 10px 0; color: #89b4fa; font-size: 14px; }
+  .semver-row { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; font-size: 13px; }
+  .semver-label { min-width: 120px; color: #a6adc8; }
+  .semver-val { color: #a6e3a1; font-family: monospace; }
+  .arrow { color: #94e2d5; }
+</style>
+</head>
+<body>
+  <p class="title">📝 Plugin 3 — Changelog Generator</p>
+  <p class="subtitle">plugins/changelog-generator/src/index.ts — Conventional commits → versioned changelog</p>
+  <div class="file-tab">📄 index.ts — Commit Type Map &amp; Version Bump</div>
+  <div class="code-block"><span class="ln"> 1</span><span class="kw">export class</span> <span class="type">ChangelogGeneratorPlugin</span> {
+<span class="ln"> 2</span>  <span class="kw">private</span> <span class="prop">commitTypeMap</span>: <span class="type">Record</span>&lt;<span class="type">string</span>, <span class="type">string</span>&gt; <span class="op">=</span> {
+<span class="ln"> 3</span>    <span class="prop">feat</span>:     <span class="str">'🚀 Features'</span>,
+<span class="ln"> 4</span>    <span class="prop">fix</span>:      <span class="str">'🐛 Bug Fixes'</span>,
+<span class="ln"> 5</span>    <span class="prop">docs</span>:     <span class="str">'📝 Documentation'</span>,
+<span class="ln"> 6</span>    <span class="prop">refactor</span>: <span class="str">'♻️ Code Refactoring'</span>,
+<span class="ln"> 7</span>    <span class="prop">perf</span>:     <span class="str">'⚡ Performance'</span>,
+<span class="ln"> 8</span>    <span class="prop">test</span>:     <span class="str">'✅ Tests'</span>,
+<span class="ln"> 9</span>    <span class="prop">ci</span>:       <span class="str">'👷 CI/CD'</span>,
+<span class="ln">10</span>  };
+<span class="ln">11</span>
+<span class="ln">12</span>  <span class="fn">parseCommit</span>(<span class="prop">msg</span>: <span class="type">string</span>, ...): <span class="iface">CommitInfo</span> | <span class="type">null</span> {
+<span class="ln">13</span>    <span class="comment">// Matches: type(scope)!: subject</span>
+<span class="ln">14</span>    <span class="kw">const</span> pattern <span class="op">=</span> <span class="str">/^(\w+)(?:\(([^)]+)\))?!?: (.+)$/</span>;
+<span class="ln">15</span>    <span class="comment">// Detects breaking changes via ! or BREAKING CHANGE</span>
+<span class="ln">16</span>  }
+<span class="ln">17</span>
+<span class="ln">18</span>  <span class="fn">calculateNextVersion</span>(<span class="prop">current</span>: <span class="type">string</span>, <span class="prop">commits</span>: <span class="iface">CommitInfo</span>[]): <span class="iface">VersionBump</span> {
+<span class="ln">19</span>    <span class="comment">// Breaking → major, feat → minor, fix → patch</span>
+<span class="ln">20</span>    <span class="kw">if</span> (hasBreaking)  { major<span class="op">++</span>; minor <span class="op">=</span> <span class="num">0</span>; patch <span class="op">=</span> <span class="num">0</span>; }
+<span class="ln">21</span>    <span class="kw">else if</span> (hasFeats) { minor<span class="op">++</span>; patch <span class="op">=</span> <span class="num">0</span>; }
+<span class="ln">22</span>    <span class="kw">else</span>               { patch<span class="op">++</span>; }
+<span class="ln">23</span>  }
+<span class="ln">24</span>
+<span class="ln">25</span>  <span class="fn">generateChangelog</span>(<span class="prop">commits</span>: <span class="iface">CommitInfo</span>[], <span class="prop">version</span>: <span class="type">string</span>): <span class="type">string</span> {
+<span class="ln">26</span>    <span class="comment">// Groups by type, renders Markdown with breaking-changes section</span>
+<span class="ln">27</span>  }
+<span class="ln">28</span>}</div>
+
+  <div class="semver-box">
+    <h4>🔢 Semantic Version Bump Rules</h4>
+    <div class="semver-row">
+      <span class="semver-label">Breaking change</span>
+      <span class="semver-val">1.0.0</span> <span class="arrow">→</span> <span class="semver-val" style="color:#f38ba8;">2.0.0</span>
+      <span style="color:#585b70; margin-left:8px;">(major)</span>
+    </div>
+    <div class="semver-row">
+      <span class="semver-label">New feature (feat:)</span>
+      <span class="semver-val">1.0.0</span> <span class="arrow">→</span> <span class="semver-val" style="color:#f9e2af;">1.1.0</span>
+      <span style="color:#585b70; margin-left:8px;">(minor)</span>
+    </div>
+    <div class="semver-row">
+      <span class="semver-label">Bug fix (fix:)</span>
+      <span class="semver-val">1.0.0</span> <span class="arrow">→</span> <span class="semver-val">1.0.1</span>
+      <span style="color:#585b70; margin-left:8px;">(patch)</span>
+    </div>
+  </div>
+</body>
+</html>

@@ -48,6 +48,9 @@ This lab builds three functional SQUAD plugins:
 
 Each plugin exports a standard interface and integrates with SQUAD agents.
 
+> 📸 [View: Plugin Architecture Overview](assets/screenshots/01-plugin-architecture.html)
+> *Open the HTML file in a browser to view the syntax-highlighted rendering.*
+
 ## Lab Instructions
 
 ### Step 1: Set Up Plugin SDK
@@ -65,6 +68,9 @@ Each plugin exports a standard interface and integrates with SQUAD agents.
    - Test setup
 
 3. Review the Plugin SDK reference at `docs/plugin-sdk-reference.md`
+
+> 📸 [View: Plugin SDK Reference — Interfaces](assets/screenshots/06-plugin-sdk-reference.html)
+> *Open the HTML file in a browser to view the syntax-highlighted rendering.*
 
 ### Step 2: Build Jira Plugin
 
@@ -98,6 +104,9 @@ Each plugin exports a standard interface and integrates with SQUAD agents.
          projectKey: DEV
    ```
 
+> 📸 [View: Jira Integration Plugin Source](assets/screenshots/02-jira-plugin-source.html)
+> *Open the HTML file in a browser to view the syntax-highlighted rendering.*
+
 ### Step 3: Build DB Migration Checker
 
 **Objective:** Parse migration files and detect destructive changes.
@@ -125,6 +134,12 @@ Each plugin exports a standard interface and integrates with SQUAD agents.
 
 5. Test with sample migrations in `test-project/prisma/migrations/`
 
+> 📸 [View: DB Migration Checker — Safety Rules & Patterns](assets/screenshots/03-db-migration-checker-source.html)
+> *Open the HTML file in a browser to view the syntax-highlighted rendering.*
+
+> 📸 [View: Test Migrations — Safe vs. Destructive SQL](assets/screenshots/05-test-project-migrations.html)
+> *Open the HTML file in a browser to view the syntax-highlighted rendering.*
+
 ### Step 4: Build Changelog Generator
 
 **Objective:** Parse commits and generate changelog with version calculation.
@@ -149,6 +164,9 @@ Each plugin exports a standard interface and integrates with SQUAD agents.
      commits: [...]
      version: v1.2.0
    ```
+
+> 📸 [View: Changelog Generator — Commit-Type Map & Semver Logic](assets/screenshots/04-changelog-generator-source.html)
+> *Open the HTML file in a browser to view the syntax-highlighted rendering.*
 
 ### Step 5: Write Tests
 
@@ -194,6 +212,9 @@ Each plugin exports a standard interface and integrates with SQUAD agents.
    ```
 
 3. Verify output in `dist/` folder
+
+> 📸 [View: npm Package Configurations](assets/screenshots/07-package-config.html)
+> *Open the HTML file in a browser to view the syntax-highlighted rendering.*
 
 ### Step 7: Test in Sample Project
 
@@ -283,6 +304,20 @@ Load → Init → Register Skills → Execute → Cleanup
 ✅ All three plugins pass unit and integration tests  
 ✅ Plugins install and configure via SQUAD team.yml  
 ✅ Sample project demonstrates all three plugins  
+
+## Screenshots
+
+The `assets/screenshots/` directory contains syntax-highlighted HTML renderings of the lab's key files. Open any `.html` file in a browser to view or capture a screenshot.
+
+| # | File | What it shows |
+|---|------|---------------|
+| 1 | [`01-plugin-architecture.html`](assets/screenshots/01-plugin-architecture.html) | High-level overview: three plugins, lifecycle flow, agent mapping |
+| 2 | [`02-jira-plugin-source.html`](assets/screenshots/02-jira-plugin-source.html) | Jira Integration plugin source with config interface and skill handlers |
+| 3 | [`03-db-migration-checker-source.html`](assets/screenshots/03-db-migration-checker-source.html) | DB Migration Checker safety rules table and regex patterns |
+| 4 | [`04-changelog-generator-source.html`](assets/screenshots/04-changelog-generator-source.html) | Changelog Generator commit-type map and semver bump logic |
+| 5 | [`05-test-project-migrations.html`](assets/screenshots/05-test-project-migrations.html) | Test migrations: safe vs. destructive SQL side-by-side |
+| 6 | [`06-plugin-sdk-reference.html`](assets/screenshots/06-plugin-sdk-reference.html) | SDK interfaces (SquadPlugin, AgentContext, EventHooks) |
+| 7 | [`07-package-config.html`](assets/screenshots/07-package-config.html) | npm package.json configs and local file: linking |
 
 ## Resources
 

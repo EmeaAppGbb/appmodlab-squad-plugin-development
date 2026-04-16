@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Test Project — Sample Migrations</title>
+<style>
+  body { margin: 0; padding: 32px; background: #1e1e2e; font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace; color: #cdd6f4; }
+  .title { color: #cba6f7; font-size: 18px; margin: 0 0 16px 0; font-family: 'Segoe UI', sans-serif; }
+  .subtitle { color: #a6adc8; font-size: 13px; margin-bottom: 20px; font-family: 'Segoe UI', sans-serif; }
+  .file-tab { background: #313244; display: inline-block; padding: 8px 18px; border-radius: 10px 10px 0 0; font-size: 13px; border: 1px solid #45475a; border-bottom: none; }
+  .tab-safe { color: #a6e3a1; }
+  .tab-danger { color: #f38ba8; }
+  .code-block { background: #181825; border: 1px solid #45475a; border-radius: 0 10px 10px 10px; padding: 16px 20px; overflow-x: auto; font-size: 13px; line-height: 1.6; margin-bottom: 20px; }
+  .ln { color: #585b70; user-select: none; display: inline-block; width: 28px; text-align: right; margin-right: 14px; }
+  .sql-kw { color: #89b4fa; font-weight: bold; }
+  .sql-type { color: #cba6f7; }
+  .sql-str { color: #a6e3a1; }
+  .sql-comment { color: #6c7086; font-style: italic; }
+  .sql-name { color: #f9e2af; }
+  .sql-danger { color: #f38ba8; font-weight: bold; background: rgba(243,139,168,0.12); padding: 1px 4px; border-radius: 3px; }
+  .sql-warn { color: #f9e2af; font-weight: bold; background: rgba(249,226,175,0.12); padding: 1px 4px; border-radius: 3px; }
+  .verdict { font-family: 'Segoe UI', sans-serif; padding: 12px 16px; border-radius: 8px; margin-top: 8px; font-size: 13px; }
+  .verdict-safe { background: rgba(166,227,161,0.1); border: 1px solid #a6e3a1; color: #a6e3a1; }
+  .verdict-unsafe { background: rgba(243,139,168,0.1); border: 1px solid #f38ba8; color: #f38ba8; }
+</style>
+</head>
+<body>
+  <p class="title">🧪 Test Project — Sample Migrations</p>
+  <p class="subtitle">test-project/prisma/migrations/ — Used to validate the DB Migration Checker plugin</p>
+
+  <div class="file-tab tab-safe">✅ 001_initial.sql</div>
+  <div class="code-block"><span class="ln">1</span><span class="sql-kw">CREATE TABLE</span> <span class="sql-name">users</span> (
+<span class="ln">2</span>    <span class="sql-name">id</span> <span class="sql-type">SERIAL PRIMARY KEY</span>,
+<span class="ln">3</span>    <span class="sql-name">email</span> <span class="sql-type">VARCHAR(255)</span> <span class="sql-kw">UNIQUE NOT NULL</span>,
+<span class="ln">4</span>    <span class="sql-name">name</span> <span class="sql-type">VARCHAR(255)</span> <span class="sql-kw">NOT NULL</span>,
+<span class="ln">5</span>    <span class="sql-name">created_at</span> <span class="sql-type">TIMESTAMP</span> <span class="sql-kw">DEFAULT CURRENT_TIMESTAMP</span>
+<span class="ln">6</span>);
+<span class="ln">7</span><span class="sql-kw">CREATE TABLE</span> <span class="sql-name">posts</span> ( ... );
+<span class="ln">8</span><span class="sql-kw">CREATE INDEX</span> <span class="sql-name">idx_posts_author</span> <span class="sql-kw">ON</span> <span class="sql-name">posts</span>(<span class="sql-name">author_id</span>);</div>
+  <div class="verdict verdict-safe">✅ Safe — Only CREATE TABLE and CREATE INDEX. No destructive operations.</div>
+
+  <div class="file-tab tab-danger">❌ 003_destructive_changes.sql</div>
+  <div class="code-block"><span class="ln">1</span><span class="sql-comment">-- WARNING: Destructive migration examples</span>
+<span class="ln">2</span><span class="sql-danger">DROP TABLE</span> <span class="sql-name">old_analytics</span>;
+<span class="ln">3</span><span class="sql-danger">ALTER TABLE</span> <span class="sql-name">users</span> <span class="sql-danger">DROP COLUMN</span> <span class="sql-name">deprecated_field</span>;
+<span class="ln">4</span><span class="sql-danger">TRUNCATE TABLE</span> <span class="sql-name">temp_data</span>;
+<span class="ln">5</span><span class="sql-warn">ALTER TABLE</span> <span class="sql-name">posts</span> <span class="sql-warn">RENAME COLUMN</span> <span class="sql-name">content</span> <span class="sql-kw">TO</span> <span class="sql-name">body</span>;
+<span class="ln">6</span><span class="sql-warn">CREATE UNIQUE INDEX</span> <span class="sql-name">idx_users_username</span> <span class="sql-kw">ON</span> <span class="sql-name">users</span>(<span class="sql-name">name</span>);</div>
+  <div class="verdict verdict-unsafe">❌ Unsafe — 3 errors (DROP TABLE, DROP COLUMN, TRUNCATE) + 2 warnings (RENAME, UNIQUE INDEX)</div>
+</body>
+</html>
