@@ -338,6 +338,72 @@ The `assets/screenshots/` directory contains syntax-highlighted HTML renderings 
 
 ---
 
+## Solution Walkthrough
+
+The complete solution is on the `solution-final` branch with step-by-step tags.
+
+### Branch & Setup
+```powershell
+git checkout main && git checkout -b solution-final
+New-Item -ItemType Directory -Force -Path assets/outputs
+```
+
+### Step 1: Set Up Plugin SDK (`step-01-plugin-sdk`)
+```powershell
+gh copilot -- -p "Review the SQUAD plugin SDK setup in this repo. Examine the three plugin directories and the SDK reference at docs/plugin-sdk-reference.md. Summarize the plugin architecture and interfaces." --allow-all-tools --yolo
+```
+**Output:** Identified 3 plugins (jira-integration, db-migration-checker, changelog-generator) implementing SquadPlugin interface with init()/getSkills(). SDK defines PluginMetadata, Skill, AgentContext, EventHooks, and PluginConfig interfaces.
+
+### Step 2: Build Jira Plugin (`step-02-jira-plugin`)
+```powershell
+gh copilot -- -p "Implement the Jira integration plugin at plugins/jira-integration/src/index.ts. It should export init(), getSkills() with two skills: sync-issue-to-jira and sync-status-from-jira. Follow the SquadPlugin interface from the SDK reference." --allow-all-tools --yolo
+```
+**Output:** JiraIntegrationPlugin with axios-based REST client. Skills: sync-issue-to-jira (creates Jira issues from GitHub issues) and sync-status-from-jira (maps Jira statuses: Done→closed, In Progress→in-progress, etc.).
+
+### Step 3: Build DB Migration Checker (`step-03-db-migration-checker`)
+```powershell
+gh copilot -- -p "Implement the DB migration checker plugin at plugins/db-migration-checker/src/index.ts. It should detect destructive SQL operations (DROP TABLE, DROP COLUMN, TRUNCATE) as errors and RENAME/UNIQUE as warnings. Scan migration files recursively and generate safety reports." --allow-all-tools --yolo
+```
+**Output:** DbMigrationCheckerPlugin with 7 safety rules (4 errors, 3 warnings). Recursively scans .sql/.ts files, applies regex patterns, generates SafetyReport with file/line/severity/snippet details.
+
+### Step 4: Build Changelog Generator (`step-04-changelog-generator`)
+```powershell
+gh copilot -- -p "Implement the changelog generator plugin at plugins/changelog-generator/src/index.ts. It should parse conventional commits (feat:, fix:, docs:, etc.), categorize them, detect breaking changes, and calculate semantic version bumps. Generate formatted CHANGELOG.md output." --allow-all-tools --yolo
+```
+**Output:** ChangelogGeneratorPlugin with 10 commit types mapped to emoji sections. Parses conventional commits via regex, detects breaking changes (!: or BREAKING CHANGE), calculates semver bumps (breaking→major, feat→minor, fix→patch).
+
+### Step 5: Test Plugins (`step-05-test-plugins`)
+```powershell
+cd plugins/jira-integration && npx vitest run && cd ../..
+cd plugins/db-migration-checker && npx vitest run && cd ../..
+cd plugins/changelog-generator && npx vitest run && cd ../..
+```
+**Output:** 22 tests passing across all 3 plugins:
+- jira-integration: 5 tests (init, getSkills, syncIssueToJira, syncStatusFromJira x2)
+- db-migration-checker: 6 tests (init, getSkills, checkMigrationSafety x2, generateReport x2)
+- changelog-generator: 11 tests (init, getSkills, parseCommit x4, categorize, calculateVersion x3, generateChangelog)
+
+### Step 6: Register Plugins with Squad (`step-06-register-plugins`)
+```powershell
+gh copilot -- -p "Register all three plugins with the Squad team configuration. Update .squad/ config to reference the plugins with their configurations. Show how each plugin integrates with specific Squad agents (Jira→Lead, DB Migration→Eyes, Changelog→Mouth)." --allow-all-tools --yolo
+```
+**Output:** Created `.squad/team.yml` and `.squad/plugins.json`. Agent mapping: Lead→jira-integration, Eyes→db-migration-checker, Mouth→changelog-generator.
+
+### Step 7: Package & Document (`step-07-package-document`)
+```powershell
+gh copilot -- -p "Generate packaging instructions and npm publish documentation for all three Squad plugins." --allow-all-tools --yolo
+```
+**Output:** Build with `npx tsc`, publish with `npm publish --access public`. Package names: @squad/plugin-{name}. Local dev via `file:../plugins/{name}` references.
+
+### Push Solution
+```powershell
+git push origin solution-final --tags
+```
+
+All step outputs are saved in `assets/outputs/step-NN-*.txt`.
+
+---
+
 **Estimated Duration:** 4-6 hours  
 **Difficulty:** Advanced  
 **Category:** Agentic Software Development
