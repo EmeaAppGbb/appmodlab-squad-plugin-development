@@ -1,0 +1,42 @@
+=== Step 03: DB Migration Checker Plugin Implementation ===
+Date: 2026-04-16 19:45:03
+
+## Implementation: plugins/db-migration-checker/src/index.ts
+
+### Class: DbMigrationCheckerPlugin
+
+**Safety Rules (7 total):**
+ERRORS (block deployment):
+1. DROP TABLE - pattern: /DROP\s+TABLE/i -> "potential data loss"
+2. DROP COLUMN - pattern: /DROP\s+COLUMN/i -> "potential data loss"
+3. ALTER TABLE DROP - pattern: /ALTER\s+TABLE\s+\w+\s+DROP/i -> "potential data loss"
+4. TRUNCATE TABLE - pattern: /TRUNCATE\s+TABLE/i -> "data will be deleted"
+
+WARNINGS (review required):
+5. DELETE FROM...WHERE - pattern: /DELETE\s+FROM.*WHERE/i -> "review carefully"
+6. ALTER TABLE RENAME - pattern: /ALTER\s+TABLE\s+\w+\s+RENAME/i -> "may break existing code"
+7. CREATE UNIQUE INDEX - pattern: /CREATE\s+UNIQUE\s+INDEX/i -> "may fail on existing data"
+
+**init() -> PluginMetadata:**
+- Returns { name: 'db-migration-checker', version: '1.0.0', skills: getSkills() }
+
+**getSkills() -> Skill[]:**
+1. check-migration-safety: Scans migration dir for destructive patterns
+   - Finds .sql and .ts files recursively via findMigrationFiles()
+   - Applies all safety rules line by line
+   - Returns SafetyReport { safe: boolean, issues: SafetyIssue[] }
+
+**generateReport(report) -> string:**
+- If safe + no issues: "All migrations are safe"
+- Groups errors and warnings with file:line references and snippets
+- Markdown formatted output
+
+### Test with sample migrations:
+- 001_initial.sql -> SAFE (CREATE TABLE, CREATE INDEX only)
+- 002_add_comments.sql -> SAFE
+- 003_destructive_changes.sql -> 3 ERRORS + 2 WARNINGS:
+  * ERROR: DROP TABLE old_analytics
+  * ERROR: ALTER TABLE users DROP COLUMN deprecated_field
+  * ERROR: TRUNCATE TABLE temp_data
+  * WARNING: ALTER TABLE posts RENAME COLUMN content TO body
+  * WARNING: CREATE UNIQUE INDEX idx_users_username ON users(name)
