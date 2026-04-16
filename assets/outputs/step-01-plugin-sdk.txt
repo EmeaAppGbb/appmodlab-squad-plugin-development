@@ -1,0 +1,41 @@
+=== SQUAD Plugin SDK Architecture Review ===
+Date: 2026-04-16 19:44:15
+
+## Plugin Architecture Overview
+
+The repo contains three SQUAD plugins that extend agent capabilities:
+
+### Plugin Directories
+1. plugins/jira-integration - Bidirectional Jira issue sync (@squad/plugin-jira-integration)
+2. plugins/db-migration-checker - Destructive migration detection (@squad/plugin-db-migration-checker)
+3. plugins/changelog-generator - Conventional commit changelog (@squad/plugin-changelog-generator)
+
+### SDK Reference (docs/plugin-sdk-reference.md)
+Core interfaces:
+- SquadPlugin: init() -> PluginMetadata, getSkills() -> Skill[]
+- PluginMetadata: name, version, description, author
+- Skill: name, description, handler (Function)
+- AgentContext: agent, repository, workspace, config
+- EventHooks: onPRCreated, onIssueOpened, onCommitPushed, onDeploymentStarted
+- PluginConfig: schema with typed fields (string/number/boolean/object)
+
+### Plugin Lifecycle
+Load -> Init -> Register Skills -> Execute -> Cleanup
+
+### Package Configuration
+All plugins use:
+- TypeScript with vitest for testing
+- @squad/sdk ^1.0.0 as peer dependency
+- dist/index.js as main entry, dist/index.d.ts for types
+- npm package name format: @squad/plugin-{name}
+
+### Agent Integration Map
+| Plugin               | Target Agent | Skills                                      |
+|----------------------|-------------|----------------------------------------------|
+| jira-integration     | Lead/Ralph  | sync-issue-to-jira, sync-status-from-jira    |
+| db-migration-checker | Eyes        | check-migration-safety                        |
+| changelog-generator  | Mouth       | generate-changelog, calculate-version         |
+
+### Test Project
+test-project/ links all three plugins via file: references
+Contains sample Prisma migrations (safe + destructive) for DB checker testing
