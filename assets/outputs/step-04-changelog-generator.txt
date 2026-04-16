@@ -1,0 +1,51 @@
+=== Step 04: Changelog Generator Plugin Implementation ===
+Date: 2026-04-16 19:45:26
+
+## Implementation: plugins/changelog-generator/src/index.ts
+
+### Class: ChangelogGeneratorPlugin
+
+**Commit Type Map (10 types):**
+- feat -> "Features"
+- fix -> "Bug Fixes"
+- docs -> "Documentation"
+- style -> "Styles"
+- refactor -> "Code Refactoring"
+- perf -> "Performance Improvements"
+- test -> "Tests"
+- build -> "Build System"
+- ci -> "CI/CD"
+- chore -> "Chores"
+
+**init() -> PluginMetadata:**
+- Returns { name: 'changelog-generator', version: '1.0.0', skills: getSkills() }
+
+**getSkills() -> Skill[]:**
+1. generate-changelog: Generate markdown changelog from commits
+2. calculate-version: Calculate semver bump from commit types
+
+**parseCommit(message, hash, author, date) -> CommitInfo|null:**
+- Regex: /^(\w+)(?:\(([^)]+)\))?!?: (.+)$/
+- Extracts: type, scope (optional), subject
+- Detects breaking changes via '!:' or 'BREAKING CHANGE' in message
+
+**categorizeCommits(commits) -> ChangelogSection[]:**
+- Groups commits by type using commitTypeMap
+- Unknown types -> "Other Changes"
+
+**generateChangelog(commits, version) -> string:**
+- Header: "# Changelog - {version}" with release date
+- Breaking changes section (if any)
+- Grouped sections by commit type with emoji icons
+- Each entry: scope prefix + subject + short hash
+
+**calculateNextVersion(currentVersion, commits) -> VersionBump:**
+- Breaking change -> MAJOR bump (1.0.0 -> 2.0.0)
+- New feature (feat) -> MINOR bump (1.0.0 -> 1.1.0)
+- Bug fix (fix) -> PATCH bump (1.0.0 -> 1.0.1)
+- Other -> PATCH bump (default)
+- Returns { current, next, type }
+
+### Exports
+- Named: ChangelogGeneratorPlugin, CommitInfo, ChangelogSection, VersionBump
+- Default: ChangelogGeneratorPlugin
