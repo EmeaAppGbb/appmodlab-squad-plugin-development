@@ -1,0 +1,73 @@
+=== Step 07: Package & Document ===
+Date: 2026-04-16 19:51:20
+
+## Packaging Instructions
+
+### Build All Plugins
+`ash
+# Build each plugin
+cd plugins/jira-integration && npx tsc && cd ../..
+cd plugins/db-migration-checker && npx tsc && cd ../..
+cd plugins/changelog-generator && npx tsc && cd ../..
+`
+
+### Package Structure (each plugin)
+`
+plugins/{name}/
+├── package.json          # @squad/plugin-{name}, main: dist/index.js
+├── src/
+│   ├── index.ts          # Source implementation
+│   └── index.test.ts     # Vitest tests
+├── dist/                 # Built output (after tsc)
+│   ├── index.js
+│   └── index.d.ts
+└── node_modules/
+`
+
+### npm Publish Commands
+`ash
+# Login to npm registry
+npm login
+
+# Publish each plugin (scoped, public access)
+cd plugins/jira-integration
+npm publish --access public
+
+cd ../db-migration-checker
+npm publish --access public
+
+cd ../changelog-generator
+npm publish --access public
+`
+
+### Verify Published Packages
+`ash
+npm view @squad/plugin-jira-integration
+npm view @squad/plugin-db-migration-checker
+npm view @squad/plugin-changelog-generator
+`
+
+### Install in a Project
+`ash
+npm install @squad/plugin-jira-integration
+npm install @squad/plugin-db-migration-checker
+npm install @squad/plugin-changelog-generator
+`
+
+### Local Development (file: links)
+`json
+{
+  "dependencies": {
+    "@squad/plugin-jira-integration": "file:../plugins/jira-integration",
+    "@squad/plugin-db-migration-checker": "file:../plugins/db-migration-checker",
+    "@squad/plugin-changelog-generator": "file:../plugins/changelog-generator"
+  }
+}
+`
+
+### Plugin Requirements
+- Must export a class implementing SquadPlugin interface
+- Must have init() returning PluginMetadata
+- Must have getSkills() returning Skill[]
+- @squad/sdk as peer dependency
+- TypeScript recommended with type declarations
