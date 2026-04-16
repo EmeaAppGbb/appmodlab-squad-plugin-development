@@ -1,0 +1,39 @@
+=== Step 02: Jira Integration Plugin Implementation ===
+Date: 2026-04-16 19:44:39
+
+## Implementation: plugins/jira-integration/src/index.ts
+
+### Class: JiraIntegrationPlugin
+
+**Config Interface (JiraPluginConfig):**
+- jiraUrl: string (Atlassian URL)
+- username: string
+- apiToken: string
+- projectKey: string
+
+**Constructor:**
+- Creates axios client with baseURL = {jiraUrl}/rest/api/3
+- Configures basic auth (username + apiToken)
+- Sets Content-Type: application/json
+
+**init() -> PluginMetadata:**
+- Returns { name: 'jira-integration', version: '1.0.0', skills: getSkills() }
+
+**getSkills() -> Skill[]:**
+1. sync-issue-to-jira: Creates Jira issue from GitHub issue data
+   - Maps title -> summary, body -> ADF description
+   - Posts to /issue endpoint
+   - Returns JiraIssue with key, summary, description, status
+
+2. sync-status-from-jira: Reads Jira status and maps to GitHub status
+   - 'To Do' -> 'open'
+   - 'In Progress' -> 'in-progress'
+   - 'Done' -> 'closed'
+   - 'Blocked' -> 'blocked'
+
+**Helper: getIssue(jiraKey) -> JiraIssue**
+- Fetches full issue details including assignee
+
+### Exports
+- Named: JiraIntegrationPlugin, JiraPluginConfig, JiraIssue
+- Default: JiraIntegrationPlugin
