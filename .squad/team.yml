@@ -1,0 +1,42 @@
+team:
+  name: squad-plugin-dev
+  description: SQUAD team with custom plugins for Jira, DB safety, and changelogs
+
+plugins:
+  - name: jira-integration
+    package: "@squad/plugin-jira-integration"
+    config:
+      jiraUrl: https://company.atlassian.net
+      username: "${JIRA_USERNAME}"
+      apiToken: "${JIRA_API_TOKEN}"
+      projectKey: DEV
+
+  - name: db-migration-checker
+    package: "@squad/plugin-db-migration-checker"
+    config:
+      migrationDir: prisma/migrations
+      failOnError: true
+
+  - name: changelog-generator
+    package: "@squad/plugin-changelog-generator"
+    config:
+      conventionalCommits: true
+      includeBreakingChanges: true
+
+agents:
+  lead:
+    skills:
+      - sync-issue-to-jira
+      - sync-status-from-jira
+    description: "Lead agent manages Jira integration for issue tracking"
+
+  eyes:
+    skills:
+      - check-migration-safety
+    description: "Eyes agent reviews PRs for destructive DB migrations"
+
+  mouth:
+    skills:
+      - generate-changelog
+      - calculate-version
+    description: "Mouth agent generates release notes and version bumps"

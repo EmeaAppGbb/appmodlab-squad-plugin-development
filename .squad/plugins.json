@@ -1,0 +1,25 @@
+{
+  "plugins": [
+    {
+      "name": "jira-integration",
+      "version": "1.0.0",
+      "path": "./plugins/jira-integration",
+      "enabled": true,
+      "agents": ["lead"]
+    },
+    {
+      "name": "db-migration-checker",
+      "version": "1.0.0",
+      "path": "./plugins/db-migration-checker",
+      "enabled": true,
+      "agents": ["eyes"]
+    },
+    {
+      "name": "changelog-generator",
+      "version": "1.0.0",
+      "path": "./plugins/changelog-generator",
+      "enabled": true,
+      "agents": ["mouth"]
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+=== Step 06: Register Plugins with Squad ===
+Date: 2026-04-16 19:51:03
+
+## Plugin Registration
+
+Created .squad/ configuration directory with:
+
+### .squad/team.yml
+- Registers all 3 plugins with Squad team
+- Configures each plugin with appropriate settings
+- Maps plugin skills to Squad agents:
+  * Lead agent -> Jira Integration (sync-issue-to-jira, sync-status-from-jira)
+  * Eyes agent -> DB Migration Checker (check-migration-safety)
+  * Mouth agent -> Changelog Generator (generate-changelog, calculate-version)
+
+### .squad/plugins.json
+- Plugin registry with version, path, and enabled status
+- Links each plugin to its target agent
+- All plugins enabled by default
+
+### Agent-Plugin Integration Map:
+| Agent | Plugin              | Skills                                    |
+|-------|--------------------|--------------------------------------------|
+| Lead  | jira-integration   | sync-issue-to-jira, sync-status-from-jira |
+| Eyes  | db-migration-checker| check-migration-safety                     |
+| Mouth | changelog-generator| generate-changelog, calculate-version      |
+
+### Usage:
+Squad agents automatically load registered plugins at startup.
+Skills become available to agents based on the team.yml mapping.
