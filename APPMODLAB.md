@@ -11,7 +11,7 @@ modernizationTools: []
 agenticTools: ["SQUAD"]
 tags: ["squad", "plugins", "agentic", "typescript", "sdk"]
 extensions: ["github.copilot"]
-thumbnail: ""
+thumbnail: "https://raw.githubusercontent.com/EmeaAppGbb/appmodlab-squad-plugin-development/main/assets/thumbnail-gpt-image.png"
 video: ""
 version: "1.0.0"
 ---
